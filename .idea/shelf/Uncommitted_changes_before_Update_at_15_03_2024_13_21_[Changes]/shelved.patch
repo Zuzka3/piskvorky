@@ -1,0 +1,181 @@
+Index: src/Board.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>public class Board {\r\n\r\n    private int[][] board;\r\n\r\n    public Board(int size) {\r\n        this.board = new int[size][size];\r\n    }\r\n\r\n    public void play(int x, int y, int player) throws Exception {\r\n        //if (x)\r\n        if (player < 1 || player > 2) throw new RuntimeException();\r\n        if (board[x][y] != 0) throw new Exception(\"Space is not empty!\");\r\n        board[x][y] = player;\r\n    }\r\n\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Board.java b/src/Board.java
+--- a/src/Board.java	(revision 63cb1cbcdfb26d02a955f073fddb6a91a1c9f1d2)
++++ b/src/Board.java	(date 1710505246973)
+@@ -1,18 +1,76 @@
++import java.util.Arrays;
++
+ public class Board {
+ 
+     private int[][] board;
++    private int winLenght = 3;
+ 
+     public Board(int size) {
+         this.board = new int[size][size];
+     }
+ 
+     public void play(int x, int y, int player) throws Exception {
+-        //if (x)
++        if (x < 0 || x > board.length || y < 0 || y > board.length) throw new Exception("Missed the board!");
+         if (player < 1 || player > 2) throw new RuntimeException();
+         if (board[x][y] != 0) throw new Exception("Space is not empty!");
+         board[x][y] = player;
+     }
+ 
++    public boolean won(int player){
++        for (int i = 0; i < board.length; i++) {
++            for (int j = 0; j < board.length; j++) {
++                //x
++                int count = 0;
++                for (int x = 0; x < winLenght; x++) {
++                    try{
++                        if (board[i][j + x] == player) count++;
++                        else break;
++                    }
++                    catch (Exception e){
++                        break;
++                    }
++                }
++                if (count >= winLenght) return true;
++                count = 0;
++                for (int x = 0; x < winLenght; x++) {
++                    if (board[i][j - x] == player) count++;
++                    else break;
++                }
++                if (count >= winLenght) return true;
++            }
++        }
++    }
+ 
+-
++    @Override
++    public String toString() {
++        StringBuilder temp = new StringBuilder();
++        for (int i = -1; i < board.length; i++) {
++            if (i == -1){
++                for (int j = -1; j < board.length; j++) {
++                    if (j == -1) temp.append("   ");
++                    else temp.append(" ").append(j + 1).append(".");
++                }
++                temp.append("\n");
++            }
++            else {
++                for (int j = -1; j < board.length; j++) {
++                    if (j == -1) {
++                        if (i + 1 < 10) temp.append(i + 1).append(".  ");
++                        else temp.append(i + 1).append(". ");
++                    }
++                    else {
++                        String tile = switch (board[i][j]){
++                            case 0 -> " ";
++                            case 1 -> "O";
++                            case 2 -> "X";
++                            default -> "E";
++                        };
++                        temp.append("[").append(tile).append("]");
++                    }
++                }
++                temp.append("\n");
++            }
++        }
++        return temp.toString();
++    }
+ }
+Index: src/Game.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>public class Game {\r\n\r\n\r\n\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Game.java b/src/Game.java
+--- a/src/Game.java	(revision 63cb1cbcdfb26d02a955f073fddb6a91a1c9f1d2)
++++ b/src/Game.java	(date 1710504260039)
+@@ -1,7 +1,12 @@
+ public class Game {
+ 
++    private Board board;
+ 
++    public Game(int size) {
++        this.board = new Board(size);
++    }
+ 
++    public void play(){
+ 
+-
++    }
+ }
+Index: src/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>public class Main {\r\n    public static void main(String[] args) {\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Main.java b/src/Main.java
+--- a/src/Main.java	(revision 63cb1cbcdfb26d02a955f073fddb6a91a1c9f1d2)
++++ b/src/Main.java	(date 1710504260018)
+@@ -1,5 +1,5 @@
+ public class Main {
+     public static void main(String[] args) {
+-
++        Game g = new Game(25);
+     }
+ }
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"a68ce649-3515-4e48-b5e9-06d6c6c57cd1\" name=\"Changes\" comment=\"\">\r\n      <change afterPath=\"$PROJECT_DIR$/src/Board.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/Game.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/misc.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/misc.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/Main.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/Main.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"CodeStyleSettingsInfer\">\r\n    <option name=\"done\" value=\"true\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectCodeStyleSettingsMigration\">\r\n    <option name=\"version\" value=\"2\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2dirhLO9M95XrBBVBWbdMraYpok\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"WebServerToolWindowFactoryState\": \"false\",\r\n    \"last_opened_file_path\": \"C:/Users/svec3/IdeaProjects/piskvorky\"\r\n  }\r\n}]]></component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"a68ce649-3515-4e48-b5e9-06d6c6c57cd1\" name=\"Changes\" comment=\"\" />\r\n      <created>1710501860394</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1710501860394</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 63cb1cbcdfb26d02a955f073fddb6a91a1c9f1d2)
++++ b/.idea/workspace.xml	(date 1710503739247)
+@@ -4,11 +4,10 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="a68ce649-3515-4e48-b5e9-06d6c6c57cd1" name="Changes" comment="">
+-      <change afterPath="$PROJECT_DIR$/src/Board.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
++    <list default="true" id="a68ce649-3515-4e48-b5e9-06d6c6c57cd1" name="Changes" comment="added board">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Board.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -58,6 +57,14 @@
+       <option name="presentableId" value="Default" />
+       <updated>1710501860394</updated>
+     </task>
++    <task id="LOCAL-00001" summary="added board">
++      <created>1710503048301</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1710503048301</updated>
++    </task>
++    <option name="localTasksCounter" value="2" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -71,4 +78,8 @@
+       </map>
+     </option>
+   </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="added board" />
++    <option name="LAST_COMMIT_MESSAGE" value="added board" />
++  </component>
+ </project>
+\ No newline at end of file
